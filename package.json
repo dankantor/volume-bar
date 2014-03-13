@@ -1,0 +1,16 @@
+{
+  "author": "Dan Kantor <dan@ex.fm>",
+  "name": "audio-volume-bar",
+  "description": "",
+  "version": "0.0.1",
+  "homepage": "https://github.com/dankantor/volume-bar",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dankantor/volume-bar.git"
+  },
+  "dependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
