@@ -1,5 +1,12 @@
 (function(){
 
+if(typeof module !== "undefined"){
+    var storage = require('local-storage-json');
+}
+else{
+    console.error('local-storage-json module must exist');
+}
+
 function VolumeBar(opts){ 
     this.back = opts.back || null;
     this.thumb = opts.thumb || null;
@@ -7,10 +14,13 @@ function VolumeBar(opts){
     this.speakerOnClass = opts.speakerOnClass || "on";
     this.speakerOffClass = opts.speakerOffClass || "off";
     this.audio =  opts.audio || null;
+    this.useLocalStorage = opts.useLocalStorage || false;
+    this.localStorageNS = opts.localStorageNS ||'audioVolumeControl';
     this.settingTimeout = null;
     this.manualSet = true;
     this.addListeners();
     this.onWindowResize();
+    this.initLocalStorage();
 }
 
 // add event listeners
@@ -138,6 +148,12 @@ VolumeBar.prototype.set = function(){
             'value': this.value
         }
     );
+    if(this.useLocalStorage === true){
+        storage.set(
+            this.localStorageNS + '_volume',
+            this.value
+        );
+    }
     this.settingTimeout = setTimeout(
         function(){
             this.manualSet = true;
@@ -170,6 +186,21 @@ VolumeBar.prototype.setManual = function(value){
         this.value = value;
         this.thumbLeft = this.value * this.width;
         this.updateDisplay();
+    }
+}
+
+// if localStoarge is enabled
+// set volume and display to 
+// value in localStorage
+VolumeBar.prototype.initLocalStorage = function(){
+    if(this.useLocalStorage === true){
+        var value = storage.get(this.localStorageNS + '_volume');
+        if(value !== null){
+            if(this.audio){
+                this.audio.volume = value;
+                this.setManual(value);
+            }
+        }
     }
 }
 
